@@ -13,12 +13,15 @@ For the preprocessing steps check [here](https://github.com/thedatumorg/UCRArchi
 ## Usage
 
 ```
-$ python main.py --dataset ucr_uea --data_path ./data/UCR2018/ --results_path ./experiment.json --model k_shape --start 1 --end 2
+$ python main.py --dataset ucr_uea --data_path ./data/UCR2018/ --results_path ./experiment.json --model k_shape --start 1 --end 1
 ```
 ```
->> 'rand_score': 0.6553072625698324, 'adjusted_rand_score': 0.28193671569162176, 'normalized_mutual_information': 0.4241221530777422, 'sub_dataset_name': 'BME', 'distance_timing': None, 'cluster_timing': 8.67257952690124
->> 'rand_score': 0.7253246753246754, 'adjusted_rand_score': 0.4509142157771761, 'normalized_mutual_information': 0.4236467946613183, 'sub_dataset_name': 'Coffee', distance_timing': None, 'cluster_timing': 1.4691011905670166
-
+'rand_score': 0.6553072625698324
+'adjusted_rand_score': 0.28193671569162176
+'normalized_mutual_information': 0.4241221530777422
+'sub_dataset_name': 'BME'
+'distance_timing': None
+'cluster_timing': 8.67257952690124
 ```
 
 
