@@ -2,6 +2,7 @@ import math
 import time
 import numpy as np
 from sklearn.metrics import pairwise_distances
+from scipy.spatial.distance import cdist
 
 
 class DistanceMatrix:
@@ -124,49 +125,51 @@ class DistanceMatrix:
 
 
     def kdtw_sim(self, x, y, gamma):
-        x_copy = np.zeros((x.shape[0]+1))
-        y_copy = np.zeros((y.shape[0]+1))
-
-        x_copy[1:] = x
-        y_copy[1:] = y
-
-        x_len, y_len = x_copy.shape[0], y_copy.shape[0]
-
-        DP = np.zeros((x_len, y_len))
-        DP1 = np.zeros((x_len, y_len))
-        DP2 = np.zeros((max(x_len, y_len)))
-
-        l = min(x_len, y_len)
-        DP2[0] = 1
-        for i in range(1, l):
-            DP2[i] = self.Dlpr(x_copy, y_copy, gamma)
-
-        DP[0, 0] = 1
-        DP1[0, 0] = 1
-        n, m = len(x_copy), len(y_copy)
-
-        for i in range(1, l):
-            DP[i,0] = DP[i-1,1]*self.Dlpr(x_copy[i], y_copy[1], gamma)
-            DP1[i,0] = DP1[i-1,1]*DP2[i]
-
-        for j in range(1, l):
-            DP[0,j] = DP[1,j-1]*self.Dlpr(x_copy[1], y_copy[j], gamma)
-            DP1[0,j] = DP1[1,j-1]*DP2[j]
-
-        for i in range(1, n):
-            for j in range(1, m):
-                lcost=self.Dlpr(x_copy[i], y_copy[j], gamma)
-                DP[i,j]=(DP[i-1,j] + DP[i,j-1] + DP[i-1,j-1])*lcost
-                if (i == j):
-                    DP1[i,j] = DP1[i-1,j-1]*lcost + DP1[i-1,j]*DP2[i] + DP1[i,j-1]*DP2[j]
+        xlen = len(x)
+        ylen = len(y)
+        xp = np.zeros(xlen+1)
+        yp = np.zeros(ylen+1)
+        for i in range(1, xlen+1):
+            xp[i] = x[i-1]
+        for i in range(1, ylen+1):
+            yp[i] = y[i-1]
+        xlen = xlen + 1
+        ylen = ylen + 1
+        x = xp
+        y = yp
+        length = max(xlen, ylen)
+        dp = np.zeros((length, length))
+        dp1 = np.zeros((length, length))
+        dp2 = np.zeros(length)
+        dp2[0] = 1
+        for i in range(1, min(xlen, ylen)):
+            dp2[i] = self.Dlpr(x[i], y[i], gamma)
+        dp[0][0] = 1
+        dp1[0][0] = 1
+        for i in range(1, xlen):
+            dp[i][0] = dp[i - 1][0] * self.Dlpr(x[i], y[1], gamma)
+            dp1[i][0] = dp1[i - 1][0] * dp2[i]
+        for i in range(1, ylen):
+            dp[0][i] = dp[0][i - 1] * self.Dlpr(x[1], y[i], gamma)
+            dp1[0][i] = dp1[0][i - 1] * dp2[i]
+        for i in range(1, xlen):
+            for j in range(1, ylen):
+                lcost = self.Dlpr(x[i], y[j], gamma)
+                dp[i][j] = (dp[i - 1][j] + dp[i][j - 1] + dp[i - 1][j - 1]) * lcost
+                if i ==j:
+                    dp1[i][j] = dp1[i - 1][j - 1] * lcost + dp1[i - 1][j] * dp2[i] + dp1[i][j - 1] * dp2[j]
                 else:
-                    DP1[i,j] = DP1[i-1,j]*DP2[i] + DP1[i,j-1]*DP2[j]
-        DP=DP+DP1
-        similarity = DP[n-1,m-1]
+                    dp1[i][j] = dp1[i - 1][j] * dp2[i] + dp1[i][j - 1] * dp2[j]
 
-        return similarity
+        for i in range(0, xlen):
+            for j in range(0, ylen):
+                dp[i][j] += dp1[i][j]
+    
+        ans = dp[xlen - 1][ylen - 1]
 
+        return ans
 
+            
     def Dlpr(self, x, y, gamma):
         factor=1/3
         minprob=1e-20
@@ -183,7 +186,210 @@ class DistanceMatrix:
         dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
         for i in range(ts.shape[0]):
             for j in range(i+1, ts.shape[0]):
-                dist_mat[i, j] = self.kdtw_norm(ts[i], ts[j], gamma=0.1)
+                dist_mat[i, j] = self.kdtw_norm(ts[i], ts[j], gamma=0.125)
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+
+
+    def gak_dist(self, x, y, gamma): 
+        x, y = np.expand_dims(x, axis=0), np.expand_dims(y, axis=0)
+        K = np.exp(-(cdist(x, y, "sqeuclidean") / (2 * gamma ** 2) + np.log(2 - np.exp(cdist(x, y, "sqeuclidean") / (2 * gamma ** 2)))))
+
+        csum = np.zeros((len(x)+1, len(y)+1))
+        csum[0][0] = 1
+        for i in range(len(x)):
+            for j in range(len(y)):
+                csum[i+1][j+1] = (csum[i, j + 1] + csum[i + 1, j] + csum[i, j]) * K[i][j]
+
+        return csum[len(x)][len(y)]
+
+
+    def gak(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.gak_dist(ts[i], ts[j], gamma=0.1)
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+
+
+    def swale_dist(self, x, y, epsilon):
+        cur = np.zeros(len(y))
+        prev = np.zeros(len(y))
+        for i in range(len(x)):
+            prev = cur
+            cur = np.zeros(len(y))
+            minw = 0
+            maxw = len(y)-1
+            for j in range(int(minw),int(maxw)+1):
+                if i + j == 0:
+                    cur[j] = 0
+                elif i == 0:
+                    cur[j] = j * 5
+                elif j == minw:
+                    cur[j] = i * 5
+                else:
+                    if (abs(x[i] - y[i]) <= epsilon):
+                        cur[j] = prev[j-1] + 1
+                    else:
+                        cur[j] = min(prev[j], cur[j-1]) + 5
+        return cur[len(y)-1]
+
+
+    def swale(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.swale_dist(ts[i], ts[j], epsilon=0.2)
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+   
+    
+    def erp_dist(self, x, y):
+        lenx = len(x)
+        leny = len(y)
+
+        acc_cost_mat = np.full((lenx, leny), np.inf)
+
+        for i in range(lenx):
+            m = 0
+            minw = 0
+            maxw = leny-1
+
+            for j in range(minw, maxw+1):
+                if i + j == 0:
+                    acc_cost_mat[i, j] = 0
+                elif i == 0:
+                    acc_cost_mat[i, j] = acc_cost_mat[i, j-1] + (y[j]-m)**2
+                elif j == 0:
+                    acc_cost_mat[i, j] = acc_cost_mat[i-1, j] + (x[i]-m)**2
+                else:
+                    acc_cost_mat[i, j] = min(acc_cost_mat[i-1, j-1] + (x[i] - y[j])**2,
+                                         acc_cost_mat[i, j-1] + (y[j] - m)**2,
+                                         acc_cost_mat[i-1, j] + (x[i]-m)**2)
+
+        return math.sqrt(acc_cost_mat[lenx-1, leny-1])
+
+
+    def erp(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.erp_dist(ts[i], ts[j])
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+
+
+    def lcss_dist(self, x, y, w):
+        lenx = len(x)
+        leny = len(y)
+        epsilon = 0.2
+        if w == None:
+            w = max(lenx, leny)
+        D = np.zeros((lenx, leny))
+        for i in range(lenx):
+            wmin = max(0, i-w)
+            wmax = min(leny-2, i+w)
+            for j in range(wmin, wmax+1):
+                if i + j == 0:
+                    if abs(x[i]-y[j]) <= epsilon:
+                        D[i][j] = 1
+                    else:
+                        D[i][j] = 0
+                elif i == 0:
+                    if abs(x[i]-y[j]) <= epsilon:
+                        D[i][j] = 1
+                    else:
+                        D[i][j] =  D[i][j-1]
+                elif j ==0:
+                    if abs(x[i]-y[j]) <= epsilon:
+                        D[i][j] = 1
+                    else:
+                        D[i][j] =  D[i-1][j]
+                else:
+                    if abs(x[i]-y[j]) <= epsilon:
+                        D[i][j] = max(D[i-1][j-1]+1,
+                                      D[i-1][j],
+                                      D[i][j+1])
+                    else:
+                        D[i][j] = max(D[i-1][j-1],
+                                      D[i-1][j],
+                                      D[i][j+1])
+        result = D[lenx-1, leny -1]
+        return 1 - result/min(len(x),len(y))
+
+
+    def lcss(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.lcss_dist(ts[i], ts[j], w=int(len(ts[i])/20))
+                print(dist_mat[i, j])
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+
+
+    def edr_dist(self, x, y):
+        cur = np.full((1, len(y)), -np.inf)
+        prev = np.full((1, len(y)), -np.inf)
+
+        for i in range(len(x)):
+            m = 0.1
+            minw = 0
+            maxw = len(y)-1
+            prev = cur
+            cur = np.full((len(y)), -np.inf)
+
+            for j in range(int(minw), int(maxw)+1):
+                if i + j == 0:
+                    cur[j] = 0
+                elif i == 0:
+                    cur[j] = -j
+                elif j == 0:
+                    cur[j] = -i
+                else:
+                    if abs(x[i] - y[j]) <= m:
+                        s1 = 0
+                    else:
+                        s1 = -1
+                    cur[j] = max(prev[j - 1] + s1, prev[j] - 1, cur[j - 1] - 1)
+
+        return 0 - cur[len(y) - 1]
+
+
+    def edr(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.edr_dist(ts[i], ts[j])
+                dist_mat[j, i] = dist_mat[i, j]
+        return dist_mat
+
+
+    def dtw_dist(self, x, y, w):
+        N = len(x)
+        M = len(y)
+        if w == None:
+            w = max(N, M)
+
+        D = np.full((N+1, M+1), np.inf)
+        D[0, 0] = 0
+        
+        for i in range(1, N+1):
+            for j in range(max(1, i-w), min(i+w, M)+1):
+                cost = (x[i-1] - y[j-1])**2
+                D[i, j] = cost + min(D[i-1,j],D[i-1,j-1],D[i,j-1])
+
+        Dist = math.sqrt(D[N, M])
+
+        return Dist
+
+
+    def dtw(self, ts):
+        dist_mat = np.zeros((ts.shape[0], ts.shape[0]))
+        for i in range(ts.shape[0]):
+            for j in range(i+1, ts.shape[0]):
+                dist_mat[i, j] = self.dtw_dist(ts[i], ts[j], w=int(len(ts[i])/10))
                 dist_mat[j, i] = dist_mat[i, j]
         return dist_mat
 
