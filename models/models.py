@@ -357,6 +357,7 @@ class ClusterModel:
 
     # Checked
     def ar_coeff(self, distance_measure):
+        from statsmodels.tsa.ar_model import AutoReg
         dist_time_start = time.time()
         ar_order = self.find_best_order(self.ts)
         coeff_features = np.zeros((self.ts.shape[0], ar_order+1))
@@ -379,6 +380,7 @@ class ClusterModel:
 
     # Checked
     def ar_pval(self, distance_measure):
+        from statsmodels.tsa.ar_model import AutoReg
         ar_order = self.find_best_order(self.ts)
         coeff_features = np.zeros((self.ts.shape[0], ar_order+1))
         for i, series in enumerate(self.ts):
@@ -413,6 +415,7 @@ class ClusterModel:
 
     # Checked
     def ar_lpcc(self, distance_measure):
+        from statsmodels.tsa.ar_model import AutoReg
         ar_order = self.find_best_order(self.ts)
         coeff_features = np.zeros((self.ts.shape[0], ar_order+1))
         for i, series in enumerate(self.ts):
