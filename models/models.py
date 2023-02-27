@@ -561,3 +561,19 @@ class ClusterModel:
         return predictions, None, cluster_timing
 
 
+    # Checked
+    def DEPICT(self, distance_measure):
+        from .DEPICT import depict
+        cluster_time_start = time.time()
+        predictions = depict(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
+
+
+    def VADE(self, distance_measure):
+        from .VADE.main import vade
+        cluster_time_start = time.time()
+        predictions = vade(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
+
