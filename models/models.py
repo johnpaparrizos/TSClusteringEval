@@ -84,7 +84,7 @@ class ClusterModel:
 
     # Checked - No Precomputed Support
     def ksc(self, distance_measure):  
-        from pyksc import ksc
+        from .pyksc import ksc
         
         cluster_time_start = time.time() 
         _, predictions, _, _ = ksc.ksc(self.ts+0.0001, self.nclusters, 100, 1)
