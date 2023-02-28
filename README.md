@@ -27,17 +27,11 @@ $ python main.py --dataset ucr_uea --data_path ./data/UCR2018/ --results_path ./
 
 ## Results
 
-The following tables contain the average Rand Index (RI), Adjusted Rand Index (ARI), and Normalized Mutual Information (NMI) accuracy values over 10 runs on the univariate datasets.
-
 Server Specifications: 4  Dual Intel(R) Xeon(R) Silver 4116 (12-core with 2-way SMT), 2.10 GHz, 196GB RAM; Ubuntu Linux 18.04.3 LTS
 
 GPU Specifications: NVIDIA GeForce RTX 2080 GPU, 32GB memory.
 
-
-| Clustering Class | Clustering Method  | Distance Measure / Feature Vector | RI | ARI | NMI   |
-|:-----------------:|:--------------------:|:--------------------:|:------:|:------:|:-----:|
-|      Partitional          |  k-Shape         | SBD               | 0.7268  | 0.2528  | 0.3362  |
-|        Partitional       |      k-DBA             | DTW               | 0.6791  | 0.2021  | 0.2776  |
-|      Partitional          |           k-SC             | STID       | 0.6282  | 0.1788  | 0.2492  |
-|        Partitional       |      k-AVG         | ED               | 0.7001  | 0.1811  | 0.2724  |
+<p align="center">
+    <img src="https://github.com/johnpaparrizos/TSClusteringEval/blob/main/docs/images/cd-plots.png">
+</p>
 
