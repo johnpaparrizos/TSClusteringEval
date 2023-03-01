@@ -577,3 +577,11 @@ class ClusterModel:
         cluster_timing = time.time() - cluster_time_start
         return predictions, None, cluster_timing
 
+
+    # Checked
+    def SDCN(self, distance_measure):
+        from .SDCN.main import sdcn
+        cluster_time_start = time.time()
+        predictions = sdcn(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
