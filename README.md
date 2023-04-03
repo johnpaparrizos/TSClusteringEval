@@ -1,6 +1,6 @@
 # TSClustering: A Comprehensive Library with Classic, Machine Learning, and Deep Learning Methods
 
-TSClustering is a new open, end-to-end benchmark suite to ease the evaluation of univariate time-series clustering methods. Our library  contains 59 time-series clustering methods belonging to 9 popular classes. 
+TSClustering is a new open, end-to-end benchmark suite to ease the evaluation of univariate time-series clustering methods. Our library contains 80 time-series clustering methods belonging to 9 popular classes. 
 
 ## Data
 
