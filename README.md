@@ -1,4 +1,4 @@
-# TSClustering: A Comprehensive Library with Classic, Machine Learning, and Deep Learning Methods
+# Time-Series Clustering: A Comprehensive Study of Data Mining, Machine Learning, and Deep Learning Methods
 
 Clustering is one of the most popular time-series tasks because it enables unsupervised data exploration and often serves as a subroutine or 
 preprocessing step for other tasks. Despite being the subject of active research for decades across disciplines, only limited efforts focused on 
