@@ -4,11 +4,37 @@ import numpy as np
 
 
 class ClusterDataLoader:
+    """
+    A class for loading cluster data from a dataset.
+
+    Args:
+        dataset_name (str): The name of the dataset.
+        dataset_path (str): The path to the dataset.
+
+    Attributes:
+        name (str): The name of the dataset.
+        path (str): The path to the dataset.
+
+    Methods:
+        load(sub_dataset_name): Load the cluster data for a specific sub-dataset.
+
+    """
+
     def __init__(self, dataset_name, dataset_path):
         self.name = dataset_name
         self.path = dataset_path
 
     def load(self, sub_dataset_name):
+        """
+        Load the cluster data for a specific sub-dataset.
+
+        Args:
+            sub_dataset_name (str): The name of the sub-dataset.
+
+        Returns:
+            tuple: A tuple containing the time series data, labels, and the number of unique labels.
+
+        """
         ts, labels = [], []
         for mode in ['_TRAIN', '_TEST']:
             with open(os.path.join(self.path, sub_dataset_name, sub_dataset_name + mode)) as csv_file:
