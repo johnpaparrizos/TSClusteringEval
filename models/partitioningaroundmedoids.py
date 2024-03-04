@@ -1,6 +1,16 @@
 import numpy as np
 
 def PartitioningAroundMedoids(nclusters, D):
+    """
+    Performs Partitioning Around Medoids (PAM) clustering algorithm.
+
+    Args:
+        nclusters (int): The number of clusters to create.
+        D (numpy.ndarray): The distance matrix.
+
+    Returns:
+        numpy.ndarray: The cluster labels for each data point.
+    """
     medoids = np.random.randint(D.shape[0], size=nclusters)
     n = D.shape[0]
     k = len(medoids)
@@ -8,7 +18,6 @@ def PartitioningAroundMedoids(nclusters, D):
 
     labels = np.argmin(D[medoids, :], axis=0)
     costs = np.min(D[medoids, :], axis=0)
-
 
     cost = np.sum(costs)
     last = 0
