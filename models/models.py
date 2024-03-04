@@ -5,6 +5,31 @@ from collections import Counter
 
 
 class ClusterModel:
+     """
+    A class representing a clustering model for time series data.
+
+    Attributes:
+        ts (numpy.ndarray): The time series data.
+        labels (numpy.ndarray): The ground truth labels for the time series data.
+        dm (DistanceMeasure): The distance measure object used for calculating distances between time series.
+        nclusters (int): The number of clusters to create.
+        linkage (str): The linkage method used for hierarchical clustering.
+        threshold_metric (str): The metric used for determining the threshold in density-based clustering.
+        param (tuple): Additional parameters for specific clustering algorithms.
+        clustering_loss (str): The type of clustering loss used.
+        ar_coeff_transforms (str): The type of autoregressive coefficient transforms used.
+        precomputed (str): Indicates whether the distance matrix is precomputed or not.
+        precomputed_dist_path (str): The path to the precomputed distance matrix.
+        sub_dataset_name (str): The name of the sub-dataset.
+        estimator: The clustering estimator object.
+        inertia: The inertia value of the clustering model.
+        pretrain_loss: The pretraining loss value.
+        train_loss: The training loss value.
+        init_ri: The initial Rand Index value.
+        final_ri: The final Rand Index value.
+        final_ari: The final Adjusted Rand Index value.
+        final_nmi: The final Normalized Mutual Information value.
+    """
     def __init__(self, ts, labels, dm, nclusters, linkage, threshold_metric, param, clustering_loss='none', ar_coeff_transforms='lpcc', precomputed='False', precomputed_dist_path=None, sub_dataset_name=None):
         self.ts = ts
         self.dm = dm
