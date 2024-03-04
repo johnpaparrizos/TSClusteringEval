@@ -6,6 +6,21 @@ from numpy.random import randint
 
 
 def kMeans(X, k):
+    """
+    Perform k-means clustering on the given data.
+
+    Parameters:
+    - X: numpy.ndarray
+        The input data array of shape (m, n), where m is the number of data points and n is the number of features.
+    - k: int
+        The number of clusters to create.
+
+    Returns:
+    - idx: numpy.ndarray
+        An array of shape (m,) containing the cluster index assigned to each data point.
+    - cent: numpy.ndarray
+        An array of shape (k, n) containing the centroid coordinates of each cluster.
+    """
     m = X.shape[0]
     idx = randint(0, k, size=m)
     cent = np.zeros((k, X.shape[1]))
@@ -59,4 +74,4 @@ def kmeans_centroid(data):
 def euclidean(data):
     x, y = data[0], data[1]
     return np.sqrt(np.sum((x-y)**2))
-
+    
