@@ -2,6 +2,25 @@ import numpy as np
 
 
 class KMedoids():
+    """
+    KMedoids clustering algorithm implementation.
+
+    Parameters:
+    - num_clusters (int): The number of clusters to create.
+    - max_T (int): The maximum number of iterations to perform.
+
+    Attributes:
+    - num_clusters (int): The number of clusters.
+    - max_T (int): The maximum number of iterations.
+    - num_iter (int): The number of iterations performed during fitting.
+    - medoids (ndarray): The indices of the medoids.
+    - _labels (ndarray): The cluster labels assigned to each data point.
+
+    Methods:
+    - fit(X): Fit the KMedoids model to the given data.
+
+    """
+
     def __init__(self, num_clusters, max_T=100):
         self.num_clusters = num_clusters
         self.max_T = max_T
@@ -35,6 +54,16 @@ class KMedoids():
             self._labels[i] = label_dict[self._labels[i]]
 
     def fit(self, X):
+        """
+        Fit the KMedoids model to the given data.
+
+        Parameters:
+        - X (ndarray): The input data.
+
+        Returns:
+        - ndarray: The cluster labels assigned to each data point.
+
+        """
         self._init(X)
         num_iter = 0
         while 1:
