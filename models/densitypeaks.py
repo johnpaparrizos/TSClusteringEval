@@ -5,19 +5,22 @@ import numpy as np
 class DensityPeakCluster(object):
     """
     Density Peak Cluster.
+
+    This class implements the Density Peak clustering algorithm.
+
     Methods:
-        fit: fit model
-        plot: plot clustering
-        
+        fit: Fit the model to the data.
+        plot: Plot the clustering.
+
     Attributes:
-        n_id: data row count
-        distance: each id distance
-        dc: threshold of density cut off
-        rho: each id density
-        nneigh: each id min upper density nearest neighbor
-        delta: each id min upper density nearest neighbor distance
-        labels_: cluster labels_
-        center: center id
+        n_id: The number of data rows.
+        distance: The distance between each pair of data points.
+        dc: The threshold of density cut off.
+        rho: The density of each data point.
+        nneigh: The minimum upper density nearest neighbor for each data point.
+        delta: The minimum upper density nearest neighbor distance for each data point.
+        labels_: The cluster labels.
+        center: The center data point.
     """
     def __init__(self,
                  dc=None,
@@ -28,14 +31,16 @@ class DensityPeakCluster(object):
                  distance_threshold=None,
                  anormal=True):
         """
-        Init parameters for Density peak cluster.
-        parameters
-        :param dc: local density threshold, None for default select, 'auto' for auto select
-        :param silence: print process log
-        :param gauss_cutoff: neighbor cutoff function, True for gauss, False for hard cutoff
-        :param density_threshold: density threshold to filter center, None for auto
-        :param distance_threshold: distance threshold to filter center, None for auto
-        :param anormal: differ anormal point to -1
+        Initialize the parameters for Density Peak clustering.
+
+        Parameters:
+        :param dc: The local density threshold. Use None for default select, 'auto' for auto select.
+        :param silence: Whether to print process log.
+        :param gauss_cutoff: The neighbor cutoff function. True for Gaussian, False for hard cutoff.
+        :param threshold_metric: The metric used to determine the density and distance thresholds.
+        :param density_threshold: The density threshold to filter center. Use None for auto.
+        :param distance_threshold: The distance threshold to filter center. Use None for auto.
+        :param anormal: Whether to assign anormal points to -1.
         """
 
         self.dc = dc
@@ -49,14 +54,14 @@ class DensityPeakCluster(object):
 
     def build_distance(self):
         """
-        Calculate distance dict.
-        :return: distance dict, max distance, min distance
+        Calculate the distance between each pair of data points.
+
+        Returns:
+        distance: The distance dictionary.
+        max_dis: The maximum distance.
+        min_dis: The minimum distance.
         """
-        #from scipy.spatial.distance import pdist, squareform
-
-        #distance_matrix = pdist(self.data, metric=self.distance_metric)
-        #distance_matrix = squareform(distance_matrix)
-
+        # Calculate distance matrix
         distance_matrix = self.data
         triangle_upper = np.triu_indices(self.data.shape[0], 1)
         triangle_upper = distance_matrix[triangle_upper]
@@ -72,8 +77,10 @@ class DensityPeakCluster(object):
 
     def auto_select_dc(self):
         """
-        Auto select the local density threshold that let average neighbor is 1-2 percent of all nodes.
-        :return: dc that local density threshold
+        Auto select the local density threshold that ensures the average neighbor is 1-2 percent of all nodes.
+
+        Returns:
+        dc: The local density threshold.
         """
         max_dis, min_dis = self.max_dis, self.min_dis
         dc = (max_dis + min_dis) / 2
@@ -82,7 +89,7 @@ class DensityPeakCluster(object):
             nneighs = sum([1 for v in self.distances.values() if v < dc]) / self.n_id ** 2
             if 0.01 <= nneighs <= 0.002:
                 break
-            # binary search
+            # Binary search
             if nneighs < 0.01:
                 min_dis = dc
             else:
@@ -94,8 +101,10 @@ class DensityPeakCluster(object):
 
     def select_dc(self):
         """
-        Select the local density threshold, default is the method used in paper, 'auto' is auto select.
-        :return: dc that local density threshold
+        Select the local density threshold.
+
+        Returns:
+        dc: The local density threshold.
         """
         if self.dc == 'auto':
             dc = self.auto_select_dc()
@@ -108,8 +117,10 @@ class DensityPeakCluster(object):
 
     def local_density(self):
         """
-        Compute all points' local density.
-        :return: local density vector that index is the point index
+        Compute the local density for all data points.
+
+        Returns:
+        rho: The local density vector.
         """
         guass_func = lambda dij, dc: math.exp(- (dij / dc) ** 2)
         cutoff_func = lambda dij, dc: 1 if dij < dc else 0
@@ -124,8 +135,11 @@ class DensityPeakCluster(object):
 
     def min_neighbor_and_distance(self):
         """
-        Compute all points' min util to the higher local density point(which is the nearest neighbor).
-        :return: distance vector, nearest neighbor vector
+        Compute the minimum distance to the higher local density point (which is the nearest neighbor) for all data points.
+
+        Returns:
+        delta: The distance vector.
+        nneigh: The nearest neighbor vector.
         """
         sort_rho_idx = np.argsort(-self.rho)
         delta, nneigh = [float(self.max_dis)] * (self.n_id), [0] * self.n_id
@@ -141,17 +155,18 @@ class DensityPeakCluster(object):
 
     def collapse(self):
         """
-        Clustering.
-        :return: None
+        Perform clustering.
+
+        Returns:
+        labels_: The cluster labels.
+        center: The center data point.
         """
         cluster, center = {}, {}  # cl/icl in cluster_dp.m
 
         if self.threshold_metric == 'median':
             if self.density_threshold is None:
-                #self.density_threshold = (min(self.rho) + max(self.rho)) / 2
                 self.density_threshold = np.median(self.rho)
             if self.distance_threshold is None:
-                #self.distance_threshold = (min(self.delta) + max(self.delta)) / 2
                 self.distance_threshold = np.median(self.delta)
         
         elif self.threshold_metric == 'kneepoint':
@@ -169,29 +184,22 @@ class DensityPeakCluster(object):
                     self.distance_threshold = np.median(self.delta)  
             except:
                 self.density_threshold = np.median(self.delta) 
-            
-            #print(-np.sort(-1 * self.rho * self.delta)[-np.sort(-1 * self.rho * self.delta)>0])
-            #self.density_threshold = KneeLocator(-np.sort(-1 * self.rho * self.delta)[-np.sort(-1 * self.rho * self.delta)>0], range(1, len(np.sort(-1 * self.rho * self.delta)[-np.sort(-1 * self.rho * self.delta)>0])+1), curve='convex', direction='decreasing').knee
-            #self.distance_threshold = KneeLocator(-np.sort(-1 * self.rho * self.delta)[-np.sort(-1 * self.rho * self.delta)>0], range(1, len(np.sort(-1 * self.rho * self.delta)[-np.sort(-1 * self.rho * self.delta)>0])+1), curve='convex', direction='decreasing').elbow
-            
 
-        # init center and other point
+        # Initialize center and other points
         for idx, (ldensity, mdistance, nneigh_item) in enumerate(zip(self.rho, self.delta, self.nneigh)):
-            #print(ldensity, mdistance)
-            #print(self.density_threshold, self.distance_threshold)
             if ldensity >= self.density_threshold and mdistance >= self.distance_threshold:
                 center[idx] = idx
                 cluster[idx] = idx
             else:
                 cluster[idx] = -1
 
-        # assignation
+        # Assignation
         ordrho = np.argsort(-self.rho)
         for i in range(ordrho.shape[0]):
             if cluster[ordrho[i]] == -1:
                 cluster[ordrho[i]] = cluster[self.nneigh[ordrho[i]]]
 
-        # halo
+        # Halo
         halo, bord_rho = {}, {}
         for i in range(ordrho.shape[0]):
             halo[i] = cluster[i]
@@ -223,21 +231,24 @@ class DensityPeakCluster(object):
 
     def fit(self, data):
         """
-        Fit model.
-        :param data: data for cluster
-        :return: None
+        Fit the model to the data.
+
+        Parameters:
+        data: The data for clustering.
+
+        Returns:
+        None
         """
         if isinstance(data, np.ndarray): data = np.array(data)
 
         self.data = data
         self.n_id = data.shape[0]
 
-        # calculate distance
+        # Calculate distance
         self.distances, self.max_dis, self.min_dis = self.build_distance()
 
-        # select dc
+        # Select dc
         self.dc = self.select_dc()
-
         # calculate local density
         self.rho = self.local_density()
 
