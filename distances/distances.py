@@ -6,6 +6,22 @@ from scipy.spatial.distance import cdist
 
 
 class DistanceMatrix:
+    """
+    Class representing a distance matrix for time series data.
+
+    Attributes:
+    - gamma: A float representing the gamma parameter used in distance calculations.
+
+    Methods:
+    - euclidean(ts): Calculates the Euclidean distance matrix for a given set of time series.
+    - msm(ts): Calculates the Matrix Profile-based Similarity Measure (MSM) distance matrix for a given set of time series.
+    - twed(ts): Calculates the Time Warp Edit Distance (TWED) distance matrix for a given set of time series.
+    - kdtw(ts): Calculates the Kernelized Dynamic Time Warping (KDTW) distance matrix for a given set of time series.
+    - gak(ts): Calculates the Global Alignment Kernel (GAK) distance matrix for a given set of time series.
+    - swale(ts): Calculates the Swale distance matrix for a given set of time series.
+    - erp(ts): Calculates the Edit Distance with Real Penalty (ERP) distance matrix for a given set of time series.
+    - lcss(ts): Calculates the Longest Common Subsequence (LCSS) distance matrix for a given set of time series.
+    """
     def __init__(self, gamma):
         self.gamma = gamma
 
@@ -452,65 +468,4 @@ class DistanceMatrix:
                 self.dist_mat[i, j] = self.calculate_sink_distance(ts[i], ts[j], sum_exp_NCCc_list[i], sum_exp_NCCc_list[j], self.gamma)
                 self.dist_mat[j, i] = self.dist_mat[i, j]
         return self.dist_mat
-
-
-if __name__ == '__main__':
-    import os
-    import sys
-    import json
-    from tqdm import tqdm
-    sys.path.append('.')
-    from datasets.ucr_uea import ClusterDataLoader
-
-    time_dict = {'timings': []}
-    dataloader = ClusterDataLoader('ucr_uea', './data/UCR2018/')
-    for sub_dataset_name in tqdm(sorted(os.listdir('./data/UCR2018/'), key=str.lower)[0:128]):
-        print(sub_dataset_name)
-        ts, labels, nclusters = dataloader.load(sub_dataset_name)
-
-        os.makedirs('./distances/stored_distances/'+sub_dataset_name, exist_ok=True)
-        metrics_dict = {'sub_dataset_name': sub_dataset_name, 'euclidean': None, 'lorentzian': None, 'SBD': None, 'sink': []}
-        dm = DistanceMatrix(None)
-
-        '''
-        # euclidean distance
-        dist_time_start = time.time()
-        dist_mat = dm.euclidean(ts)
-        dist_timing = time.time() - dist_time_start
-        metrics_dict['euclidean'] = dist_timing
-        np.savetxt('./distances/stored_distances/'+sub_dataset_name+'/'+'euclidean.txt', dist_mat)
-        print('Euclidean', dist_timing)
-
-        # lorentzian distance
-        dist_time_start = time.time()
-        dist_mat = dm.lorentzian(ts)
-        dist_timing = time.time() - dist_time_start
-        metrics_dict['lorentzian'] = dist_timing
-        np.savetxt('./distances/stored_distances/'+sub_dataset_name+'/'+'lorentzian.txt', dist_mat)
-        print('Lorentzian', dist_timing)
-        '''
-
-        # SBD distance
-        dist_time_start = time.time()
-        dist_mat = dm.SBD(ts)
-        dist_timing = time.time() - dist_time_start
-        metrics_dict['SBD'] = dist_timing
-        np.savetxt('./distances/stored_distances/'+sub_dataset_name+'/'+'sbd.txt', dist_mat)
-        print('SBD', dist_timing)
-
-        '''
-        # SINK distance
-        for gamma in range(19, 21):
-            dm = DistanceMatrix(ts, gamma)
-            dist_time_start = time.time()
-            dist_mat = dm.sink(ts)
-            dist_timing = time.time() - dist_time_start
-            metrics_dict['sink'].append([gamma, dist_timing])
-            np.savetxt('./distances/stored_distances/'+sub_dataset_name+'/'+'sink_'+str(gamma)+'.txt', dist_mat)
-            print('SINK', dist_timing)
-        '''
-
-        time_dict['timings'].append(metrics_dict)
-
-    with open('./distances/timings/timing_sbd.json', 'w') as f:
-        json.dump(time_dict, f)
+        
