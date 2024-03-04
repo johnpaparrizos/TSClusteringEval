@@ -7,36 +7,23 @@ from models.models import ClusterModel
 from metrics.metrics import ClusterMetrics
 from datasets.ucr_uea import ClusterDataLoader
 from distances.distances import DistanceMatrix
+
 sys.path.append('.')
 
-
 parser = argparse.ArgumentParser(description='Clustering')
-parser.add_argument('--dataset', type=str, default='ucr_uea',
-                    help='dataset name')
-parser.add_argument('--start', type=int, default=1,
-                    help='start number of dataset')
-parser.add_argument('--end', type=int, default=128,
-                    help='end number of dataset')
-parser.add_argument('--data_path', type=str, default='./data/UCR2018/',
-                    help='path to the dataset')
-parser.add_argument('--results_path', type=str, default=None,
-                    help='path to the results')
-parser.add_argument('--model', type=str, default='agglomerative',
-                    help='name of the model')
-parser.add_argument('--linkage', type=str, default=None,
-                    help='linkage in hierarchial clustering')
-parser.add_argument('--ar_coeff_transforms', type=str, default='lpcc',
-                    help='ar coefficient transform')
-parser.add_argument('--gamma', type=int, default=None,
-                    help='gamma value for SINK distance')
-parser.add_argument('--threshold_metric', type=str, default='kneepoint',
-                    help='threshold metric for DensityPeaks')
-parser.add_argument('--distance', type=str, default=None,
-                    help='distance measure')
-parser.add_argument('--precomputed', type=str, default='False',
-                    help='use precomputed distances')
-parser.add_argument('--param_file', type=str, default=None,
-                    help='path to extra parameter file')
+parser.add_argument('--dataset', type=str, default='ucr_uea', help='dataset name')
+parser.add_argument('--start', type=int, default=1, help='start number of dataset')
+parser.add_argument('--end', type=int, default=128, help='end number of dataset')
+parser.add_argument('--data_path', type=str, default='./data/UCR2018/', help='path to the dataset')
+parser.add_argument('--results_path', type=str, default=None, help='path to the results')
+parser.add_argument('--model', type=str, default='agglomerative', help='name of the model')
+parser.add_argument('--linkage', type=str, default=None, help='linkage in hierarchical clustering')
+parser.add_argument('--ar_coeff_transforms', type=str, default='lpcc', help='ar coefficient transform')
+parser.add_argument('--gamma', type=int, default=None, help='gamma value for SINK distance')
+parser.add_argument('--threshold_metric', type=str, default='kneepoint', help='threshold metric for DensityPeaks')
+parser.add_argument('--distance', type=str, default=None, help='distance measure')
+parser.add_argument('--precomputed', type=str, default='False', help='use precomputed distances')
+parser.add_argument('--param_file', type=str, default=None, help='path to extra parameter file')
 args = parser.parse_args()
 
 
@@ -67,7 +54,6 @@ def main():
                                  args.ar_coeff_transforms, args.precomputed, precomputed_dist_path, sub_dataset_name=sub_dataset_name)
             predictions, dist_timing, cluster_timing = getattr(model, args.model)(args.distance)
 
-
         metrics = ClusterMetrics(labels, predictions)
         metrics_dict = {'rand_score': None, 'adjusted_rand_score': None, 'normalized_mutual_information': None}
         for metric in metrics_dict.keys():
@@ -91,4 +77,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
