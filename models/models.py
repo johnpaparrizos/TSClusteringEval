@@ -610,3 +610,30 @@ class ClusterModel:
         predictions = sdcn(self.ts, self.labels, self.nclusters)
         cluster_timing = time.time() - cluster_time_start
         return predictions, None, cluster_timing
+
+
+    # Checked
+    def MOMENT(self, distance_measure):
+        from .MOMENT.main import moment
+        cluster_time_start = time.time()
+        predictions = moment(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
+
+
+    # Checked
+    def OFA(self, distance_measure):
+        from .OFA.main import ofa
+        cluster_time_start = time.time()
+        predictions = ofa(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
+
+
+    # Checked
+    def CHRONOS(self, distance_measure):
+        from .CHRONOS.main import chronos
+        cluster_time_start = time.time()
+        predictions = chronos(self.ts, self.labels, self.nclusters)
+        cluster_timing = time.time() - cluster_time_start
+        return predictions, None, cluster_timing
