@@ -115,7 +115,7 @@ lists the methods considered:
 |:------------------|:----------------------------------|:-------------------|
 | FeatTS              | -                                 |        [18]             |
 | SS-DTW             | -                                 |         [19]             |
-### <span style='color:Tomato'>Model and Feature Clustering</span> 
+### <span style='color:Tomato'>Model and Feature based Clustering</span> 
 | <span style="background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold"> Clustering Method </span>  | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Distance Measure / Feature Vector </span> | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Reference  </span> |
 |:------------------|:----------------------------------|:----------------------------|
 | 𝑘-AVG             | AR-COEFF                                 |                 [20]              |
@@ -123,7 +123,7 @@ lists the methods considered:
 | 𝑘-AVG             | LPCC                                 |             [21]                  |
 | 𝑘-AVG             | CATCH22                                 |          [23]                     |
 | 𝑘-AVG             | ES-COEFF                                 |           [22]                    |
-### <span style='color:Tomato'>Deep Learning Clustering</span> 
+### <span style='color:Tomato'>Deep Learning based Clustering</span> 
 | <span style="background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold"> Clustering Method </span>  | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Distance Measure / Feature Vector </span> | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Reference  </span> |
 |:------------------|:----------------------------------|:-------------------------------------|
 | IDEC            | -                                 |               [27]                |
@@ -136,7 +136,13 @@ lists the methods considered:
 | ClusterGAN            | -                                 |           [34]                    |
 | VADE            | -                                 |              [33]                 |
 | DCN            | -                                 |              [25]                 |
-
+| CSL            | -                                 |              [35]                 |
+### <span style='color:Tomato'>Foundational Model based Clustering</span> 
+| <span style="background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold"> Clustering Method </span>  | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Distance Measure / Feature Vector </span> | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Reference  </span> |
+|:------------------|:----------------------------------|:-------------------------------------|
+| MOMENT            | -                                 |               [38]                |
+| OFA            | -                                 |             [37]                  |
+| CHRONOS           | -                                 |              [36]                  |
 
 ## References
 
@@ -207,4 +213,8 @@ lists the methods considered:
 [33] Jiang, Zhuxi, Yin Zheng, Huachun Tan, Bangsheng Tang, and Hanning Zhou. "Variational deep embedding: A generative approach to clustering." CoRR, abs/1611.05148 1 (2016).
 <br>
 [34] Ghasedi, Kamran, Xiaoqian Wang, Cheng Deng, and Heng Huang. "Balanced self-paced learning for generative adversarial clustering network." In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pp. 4391-4400. 2019.
+[35] Liang, Zhiyu, Jianfeng Zhang, Chen Liang, Hongzhi Wang, Zheng Liang, and Lujia Pan. "Contrastive shapelet learning for unsupervised multivariate time series representation learning." arXiv preprint arXiv:2305.18888 (2023).
+[36] Ansari, Abdul Fatir, Lorenzo Stella, Caner Turkmen, Xiyuan Zhang, Pedro Mercado, Huibin Shen, Oleksandr Shchur et al. "Chronos: Learning the language of time series." arXiv preprint arXiv:2403.07815 (2024).
+[37] Zhou, Tian, Peisong Niu, Liang Sun, and Rong Jin. "One fits all: Power general time series analysis by pretrained lm." Advances in neural information processing systems 36 (2023): 43322-43355.
+[38] Goswami, Mononito, Konrad Szafer, Arjun Choudhry, Yifu Cai, Shuo Li, and Artur Dubrawski. "Moment: A family of open time-series foundation models." arXiv preprint arXiv:2402.03885 (2024).
 
