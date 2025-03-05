@@ -7,7 +7,6 @@ from collections import Counter
 class ClusterModel:
      """
     A class representing a clustering model for time series data.
-
     Attributes:
         ts (numpy.ndarray): The time series data.
         labels (numpy.ndarray): The ground truth labels for the time series data.
