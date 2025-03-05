@@ -6,7 +6,6 @@ import numpy as np
 class ClusterDataLoader:
     """
     A class for loading cluster data from a dataset.
-
     Args:
         dataset_name (str): The name of the dataset.
         dataset_path (str): The path to the dataset.
