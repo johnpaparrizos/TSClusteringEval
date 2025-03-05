@@ -55,6 +55,7 @@ lists the methods considered:
 | <span style="background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold"> Clustering Method </span>  | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Distance Measure / Feature Vector </span> | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Reference  </span> |
 |:------------------|:----------------------------------|:------------------------------------|
 |𝑘-AVG              |ED                                 |                 [1]          |
+|KASBA              |MSM                                |               [39]           |
 |𝑘-Shape              |SBD                                 |          [3]                 |
 |𝑘-SC              |STID                                 |            [5]               |
 |𝑘-DBA              |DTW                                 |           [4]                |
@@ -221,4 +222,6 @@ lists the methods considered:
 [37] Zhou, Tian, Peisong Niu, Liang Sun, and Rong Jin. "One fits all: Power general time series analysis by pretrained lm." Advances in neural information processing systems 36 (2023): 43322-43355.
 <br>
 [38] Goswami, Mononito, Konrad Szafer, Arjun Choudhry, Yifu Cai, Shuo Li, and Artur Dubrawski. "Moment: A family of open time-series foundation models." arXiv preprint arXiv:2402.03885 (2024).
+<br>
+[39] Holder, Christopher, and Anthony Bagnall. "Rock the KASBA: Blazingly Fast and Accurate Time Series Clustering." arXiv preprint arXiv:2411.17838 (2024).
 <br>
