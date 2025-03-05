@@ -8,7 +8,6 @@ from scipy.spatial.distance import cdist
 class DistanceMatrix:
     """
     Class representing a distance matrix for time series data.
-
     Attributes:
     - gamma: A float representing the gamma parameter used in distance calculations.
 
