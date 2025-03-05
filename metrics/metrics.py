@@ -4,7 +4,6 @@ from sklearn import metrics
 class ClusterMetrics:
     """
     Class for computing clustering evaluation metrics.
-    
     Args:
         gt (array-like): Ground truth labels.
         pred (array-like): Predicted labels.
