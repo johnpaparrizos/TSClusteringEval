@@ -9,7 +9,6 @@ from tqdm import tqdm
 def view_results(path):
     """
     View the results of a clustering experiment.
-
     Args:
         path (str): Path to the directory containing the results.
 
