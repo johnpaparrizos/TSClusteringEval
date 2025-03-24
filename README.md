@@ -135,7 +135,7 @@ lists the methods considered:
 | VADE            | -                                 |              [33]                 |
 | DCN            | -                                 |              [25]                 |
 | CSL            | -                                 |              [35]                 |
-### <span style='color:Tomato'>Foundational Model based Clustering</span> 
+### <span style='color:Tomato'>Foundation Model based Clustering</span> 
 | <span style="background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold"> Clustering Method </span>  | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Distance Measure / Feature Vector </span> | <span style='background-color:DarkSlateGray;color:LavenderBlush;font-weight:bold'> Reference  </span> |
 |:------------------|:----------------------------------|:-------------------------------------|
 | MOMENT            | -                                 |               [38]                |
