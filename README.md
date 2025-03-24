@@ -1,9 +1,6 @@
 # Time-Series Clustering: A Comprehensive Study of Data Mining, Machine Learning, and Deep Learning Methods
 
-Clustering is one of the most popular time-series tasks because it enables unsupervised data exploration and often serves as a subroutine or 
-preprocessing step for other tasks. Despite being the subject of active research for decades across disciplines, only limited efforts focused on 
-benchmarking clustering methods for time series. Therefore, we comprehensively evaluate 80 time-series clustering methods spanning 9 different 
-classes from the data mining, machine learning, and deep learning literature.
+Time-series clustering is one of the most popular tasks in time series analysis, offering a pathway for unsupervised data exploration and often acting as a subroutine for other tasks. Despite being the subject of active research across disciplines for decades, there has been limited focus on benchmarking clustering methods for time series data. Unfortunately, existing studies have (i) omitted popular methods and entire classes of methods; (ii) considered limited choices for underlying distance measures; (iii) performed evaluations on a small number of datasets; (iv) avoided statistical validation of the findings; (v) suffered from poor reproduction of existing methods; or (vi) used questionable evaluation settings. Moreover, the growing enthusiasm for deep learning, particularly with the rise of foundation models that claim superior generalization across tasks and domains, highlights the need for a comprehensive evaluation, as their applicability to time-series clustering remains underexplored. Motivated by the aforementioned limitations, we comprehensively evaluate 84 clustering methods for time-series data, encompassing 10 different classes derived from data mining, machine learning, and deep learning literature. The evaluation is conducted across 128 different time-series datasets using rigorous statistical analysis.
 
 ## Data
 
